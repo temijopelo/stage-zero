@@ -1,0 +1,127 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+  height: 100vh;
+  color: #000000;
+}
+
+h1 {
+  font-size: 2.4rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.root_card_container {
+  padding: 1rem;
+  background-color: #d2f0f3;
+}
+
+.title {
+  padding: 1rem;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.title_completed {
+  text-decoration: underline line-through;
+}
+
+.description {
+  padding: 1rem;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.root_time_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.root_status_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  align-items: center;
+  max-width: 400px;
+}
+.status_tags_container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.status_container {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.4rem;
+}
+
+.checkbox_container {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.priority_badge {
+  background-color: red;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+}
+
+.tags {
+  padding: 0.3rem;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.8rem;
+}
+
+.root_btn_container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.root_btn_container button {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 0.8rem;
+  cursor: pointer;
+}
+.edit_btn {
+  background-color: #007bff;
+  color: white;
+}
+.delete_btn {
+  background-color: red;
+  color: white;
+}
+
+@media screen and (min-width: 500px) {
+  .root_card_container {
+    max-width: 500px;
+    margin: auto;
+    border-radius: 0.8rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
