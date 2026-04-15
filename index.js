@@ -7,6 +7,9 @@ const dueDateElement = document.querySelector(
 const timeRemainingElement = document.querySelector(
   '[data-testid="test-todo-time-remaining"]',
 );
+const overdueIndicatorElement = document.querySelector(
+  '[data-testid="test-todo-overdue-indicator"]',
+);
 const titleElement = document.querySelector('[data-testid="test-todo-title"]');
 const descElement = document.querySelector(
   '[data-testid="test-todo-description"]',
@@ -63,6 +66,39 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 let snapshot = {};
+let fullDescriptionText = "";
+
+const MAX_LENGTH = 50;
+
+document.querySelectorAll(".description_container").forEach((container) => {
+  const desc = container.querySelector(".description");
+  const toggleBtn = container.querySelector("button");
+
+  fullDescriptionText = desc.textContent.trim();
+  let isExpanded = false;
+
+  const truncateText = (text) => {
+    return text.length > MAX_LENGTH ? text.slice(0, MAX_LENGTH) + "..." : text;
+  };
+
+  desc.textContent = truncateText(fullDescriptionText);
+  if (fullDescriptionText.length <= MAX_LENGTH) {
+    toggleBtn.style.display = "none";
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    isExpanded = !isExpanded;
+
+    desc.textContent = isExpanded
+      ? fullDescriptionText
+      : truncateText(fullDescriptionText);
+
+    // Toggle icon
+    toggleBtn.innerHTML = isExpanded
+      ? `<i class="fa-regular fa-square-minus"></i>`
+      : `<i class="fa-regular fa-square-plus"></i>`;
+  });
+});
 
 function formatRemainingTime(milliseconds) {
   const totalMinutes = Math.floor(milliseconds / (1000 * 60));
@@ -107,6 +143,9 @@ function updateTaskDates() {
     if (timeRemainingElement) {
       timeRemainingElement.textContent = "N/A";
     }
+    if (overdueIndicatorElement) {
+      overdueIndicatorElement.classList.add("hidden");
+    }
     return;
   }
 
@@ -122,10 +161,16 @@ function updateTaskDates() {
 
   if (remaining <= 0) {
     timeRemainingElement.dateTime = "PT0M";
-    timeRemainingElement.textContent = "Task is overdue";
+    timeRemainingElement.textContent = "";
+    if (overdueIndicatorElement) {
+      overdueIndicatorElement.classList.remove("hidden");
+    }
     return;
   }
 
+  if (overdueIndicatorElement) {
+    overdueIndicatorElement.classList.add("hidden");
+  }
   timeRemainingElement.textContent = formatRemainingTime(remaining);
 }
 
@@ -141,18 +186,39 @@ function updateCompletionState() {
   }
 
   if (statusElement) {
-    statusElement.textContent = isDone ? "Done" : "In Progress";
+    if (isDone) {
+      statusElement.textContent = "Done";
+      statusSel.value = "Done";
+    } else if (statusElement.textContent.trim() === "Done") {
+      statusElement.textContent = "Pending";
+      statusSel.value = "Pending";
+    }
   }
 
   if (isDone) {
     timeRemainingElement.textContent = "Completed";
     timeRemainingElement.dateTime = "PT0M";
+    timeRemainingElement.classList.add("time_remaining_text_completed");
+    timeRemainingElement.classList.remove("time_remaining_text");
+    if (overdueIndicatorElement) {
+      overdueIndicatorElement.classList.add("hidden");
+    }
+  }
+
+  if (prioritySel.value === "High") {
+    priorityElement.classList.add("priority_badge");
+    priorityElement.classList.remove(
+      "priority_badge_medium",
+      "priority_badge_low",
+    );
+  } else if (prioritySel.value === "Medium") {
+    priorityElement.classList.add("priority_badge_medium");
+    priorityElement.classList.remove("priority_badge", "priority_badge_low");
   } else {
-    updateTaskDates();
+    priorityElement.classList.add("priority_badge_low");
+    priorityElement.classList.remove("priority_badge", "priority_badge_medium");
   }
 }
-
-function toggleCollapsibleSection() {}
 
 function toggleEditMode(isEditing) {
   titleElement.classList.toggle("hidden", isEditing);
@@ -193,13 +259,12 @@ if (deleteButtonElement) {
 editButtonElement.addEventListener("click", () => {
   snapshot = {
     title: titleElement.textContent.trim(),
-    desc: descElement.textContent.trim(),
+    desc: fullDescriptionText,
     priority: priorityElement.textContent.trim(),
     dueDate: dueDateElement.getAttribute("datetime"),
     status: statusElement.textContent.trim(),
   };
 
-  // Pre-fill inputs with current display values
   titleInput.value = snapshot.title;
   descInput.value = snapshot.desc;
   dueDateInput.value = snapshot.dueDate ? snapshot.dueDate.split("T")[0] : "";
@@ -211,19 +276,23 @@ editButtonElement.addEventListener("click", () => {
 
 saveBtn.addEventListener("click", () => {
   titleElement.textContent = titleInput.value;
-  descElement.textContent = descInput.value;
+  fullDescriptionText = descInput.value.trim();
+  descElement.textContent = fullDescriptionText;
   priorityElement.textContent = prioritySel.value;
   statusElement.textContent = statusSel.value;
+  completeToggleElement.checked = statusSel.value === "Done";
   dueDateElement.textContent = dueDateInput.value;
   dueDateElement.setAttribute("datetime", dueDateInput.value);
 
   toggleEditMode(false);
   updateTaskDates();
+  updateCompletionState();
 });
 
 cancelBtn.addEventListener("click", () => {
   titleElement.textContent = snapshot.title;
-  descElement.textContent = snapshot.desc;
+  fullDescriptionText = snapshot.desc;
+  descElement.textContent = fullDescriptionText;
   priorityElement.textContent = snapshot.priority;
   statusElement.textContent = snapshot.status;
 

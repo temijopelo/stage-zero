@@ -14,19 +14,24 @@
 
         <h2 class="title" data-testid="test-todo-title">Clear Dishes and Load Dishwasher</h2>
         <input class="title_input title hidden" value="Clear Dishes and Load Dishwasher"
-            data-testid="test-todo-edit-title-input" />
+            data-testid="test-todo-edit-title-input" aria-describedby="title-error" />
+        <p id="title-error" class="field_error hidden" aria-live="polite"></p>
         <div data-testid="test-todo-collapsible-section" class="description_container">
-            <button data-testid="test-todo-expand-toggle">
+            <button class="description_toggle" data-testid="test-todo-expand-toggle" aria-expanded="false"
+                aria-controls="todo-description-text" aria-label="Expand description">
 
                 <i class="fa-regular fa-square-plus"></i>
             </button>
-            <p class="description" data-testid="test-todo-description">Complete the task of clearing dishes and loading
+            <p id="todo-description-text" class="description" data-testid="test-todo-description">Complete the task of
+                clearing dishes and loading
                 the
                 dishwasher.
             </p>
         </div>
-        <textarea data-testid="test-todo-edit-description-input" class="description_input description  hidden"
-            placeholder="Enter task description...">Complete the task of clearing dishes and loading the dishwasher.</textarea>
+        <textarea data-testid="test-todo-edit-description-input" class="description_input description hidden"
+            placeholder="Enter task description..."
+            aria-describedby="description-error">Complete the task of clearing dishes and loading the dishwasher.</textarea>
+        <p id="description-error" class="field_error hidden" aria-live="polite"></p>
         <div class="root_time_container">
             <span class="time_container">
                 <span>Priority:</span>
@@ -35,22 +40,23 @@
                 </span>
                 <select name="" id="" data-testid="test-todo-edit-priority-select" aria-label="Select task priority"
                     class="priority_select hidden">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High" selected>High</option>
+                    <option data-testid="test-todo-priority-indicator" value="Low">Low</option>
+                    <option data-testid="test-todo-priority-indicator" value="Medium">Medium</option>
+                    <option data-testid="test-todo-priority-indicator" value="High" selected>High</option>
                 </select>
             </span>
             <span class="time_container">
-                <span>Due Date:</span>
+                <label for="todo-due-date" data-testid="test-todo-due-date-label">Due Date:</label>
                 <time datetime="2026-04-16T00:00:00" data-testid="test-todo-due-date">
                     Due Date
                 </time>
-                <input data-testid="test-todo-edit-due-date-input" type="date" name="" id="" class="hidden"
-                    aria-label="Select due date">
+                <input data-testid="test-todo-edit-due-date-input" type="date" name="" id="todo-due-date" class="hidden"
+                    aria-label="Select due date" aria-describedby="due-date-error">
             </span>
+            <p id="due-date-error" class="field_error hidden" aria-live="polite"></p>
             <span class="time_container time_remaining_container">
                 <span>Time Remaining:</span>
-                <time datetime="" data-testid="test-todo-time-remaining" aria-live="polite">
+                <time class="time_remaining_text" datetime="" data-testid="test-todo-time-remaining" aria-live="polite">
                     Time Remaining
                 </time>
                 <span class="overdue hidden" data-testid="test-todo-overdue-indicator">Overdue</span>
@@ -61,7 +67,7 @@
                 <span class="status_container">
                     <span>Status:</span>
                     <time data-testid="test-todo-status" aria-label="Task is currently in progress">
-                        In Progress
+                        Pending
                     </time>
                     <select name="" id="" data-testid="test-todo-status-control" aria-label="Select status"
                         class="priority_select hidden">
@@ -98,6 +104,8 @@
                     aria-label="Cancel">Cancel</button>
             </span>
         </div>
+
+        <p id="form-announcement" class="sr_only" aria-live="polite" aria-atomic="true"></p>
 
     </section>
     <script src="index.js"></script>
